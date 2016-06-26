@@ -1,0 +1,25 @@
+{% extends "main_menu.html" %}
+
+{% block content %}
+
+<h1>Sign In</h1>
+<form action="" method="post" name="login">
+    {{form.hidden_tag()}}
+    <p>
+        Login <br/>
+        {{form.login(size = 80)}} 
+        {% for error in form.errors.login %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %} <br/>
+        
+        Password <br/>
+        {{form.password(size = 80)}} 
+        {% for error in form.errors.password %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %} <br/>
+    </p>
+    <p>{{form.remember_me}} Remember Me</p>
+    <p><input type="submit" value="Sign In"/></p>
+</form>
+
+{% endblock %}
