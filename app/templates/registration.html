@@ -1,0 +1,37 @@
+{% extends "main_menu.html" %}
+
+{% block content %}
+
+<h1>Registration</h1>
+<form action="" method="post" name="registration">
+    {{form.hidden_tag()}}
+    <p>
+        Login <br/>
+        {{form.login(size = 80)}} 
+        {% for error in form.errors.login %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %} <br/>
+        
+        Email <br/>
+        {{form.email(size = 80)}}
+        {% for error in form.errors.email %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %} <br/>
+        
+        Password <br/>
+        {{form.password(size = 80)}} 
+        {% for error in form.errors.password %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %} <br/>
+        
+        Confirm password <br/>
+        {{form.confirm(size = 80)}} 
+        {% for error in form.errors.confirm %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %} <br/>
+    </p>
+    <p>{{form.accept_rules}}Accept rules</p>
+    <p><input type="submit" value="Finish"/></p>
+</form>
+
+{% endblock %}

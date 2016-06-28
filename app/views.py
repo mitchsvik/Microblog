@@ -1,7 +1,7 @@
 from flask import render_template, redirect, flash, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from forms import LoginForm
+from forms import RegistrationForm, LoginForm
 from models import User, ROLE_USER, ROLE_ADMIN
 
 @app.route('/')
@@ -24,7 +24,26 @@ def index():
 
 @app.route('/registration', methods = {'GET', 'POST'})
 def registration():
-    pass
+    if g.user is not None and g.user.is_authenticated:
+        return redirect(url_for('index'))
+    
+    form = RegistrationForm()
+    
+    if form.validate_on_submit():
+        return try_to_register(login = form.login.data, email = form.email.data, password = form.password.data)
+    
+    return render_template('registration.html', title = 'Registration',
+                          form = form)
+
+def try_to_register(login = None, email = None, password = None):
+    if User.query.filter_by(nickname = login).first() == None and User.query.filter_by(email = email).first() == None:
+        user = User(nickname = login, email = email, password = password, role = ROLE_USER)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('login'))
+        
+    flash('Login or Email are already used. Please try another')
+    return redirect(url_for('registration'))
 
 @app.before_request
 def before_request():
