@@ -1,0 +1,12 @@
+{% extends "main_menu.html" %}
+
+{% block content %}
+<h1>Edit Profile</h1>
+<form action="" method="post" name="edit">
+    {{form.hidden_tag()}}
+    <div>
+        About yourself: {{form.about(cols = 32, rows = 4)}}
+    </div>
+    <input type="submit" value="Save Changes"/>
+</form>
+{% endblock %}

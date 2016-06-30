@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, PasswordField, BooleanField
+from wtforms import TextField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import Required, Length, Email, EqualTo
 
 class RegistrationForm(Form):
@@ -13,3 +13,6 @@ class LoginForm(Form):
     login = TextField('Login', validators = [Required()])
     password = PasswordField('Password', validators = [Required()])
     remember_me = BooleanField('Remember me', default = False)
+
+class EditForm(Form):
+    about = TextAreaField('About user', validators = [Length(min = 0, max = 199)])

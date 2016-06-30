@@ -2,14 +2,12 @@
 
 {% block content %}
 <div>
-    <h1>User: {{user.nickname}}</h1><hr/>
-    {% if user.about %}<p>{{user.about}}</p>{% endif %}<hr/>
-    {% if user.last_seen %}<p>{{user.last_seen}}</p>{% endif %}<hr/>
+    <h1>User: {{user.nickname}}</h1>
+    {% if user.about %}<p>{{user.about}}</p>{% endif %}
+    {% if user.last_seen %}<p>Last seen: {{user.last_seen}}</p>{% endif %}
+    <a href="{{url_for('edit')}}">Edit</a><hr/>
 </div>
 {% for post in posts %}
-<p>
-    {{post.author.nickname}} says: <b>{{post.body}}</b>
-</p>
+    {% include 'post.html' %}
 {% endfor %}
 {% endblock %}
-    
