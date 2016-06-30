@@ -10,6 +10,8 @@ class User(db.Model):
     email = db.Column(db.String(128), index = True, unique = True)
     role = db.Column(db.SmallInteger, default = ROLE_USER)
     posts = db.relationship('Post', backref = 'author', lazy = 'dynamic')
+    about = db.Column(db.String(200))
+    last_seen = db.Column(db.DateTime)
     
     def is_authenticated(self):
         return True

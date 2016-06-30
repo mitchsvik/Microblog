@@ -1,11 +1,15 @@
 {% extends "main_menu.html" %}
 
 {% block content %}
-<h1>User: {{user.nickname}}</h1>
-<hr/>
+<div>
+    <h1>User: {{user.nickname}}</h1><hr/>
+    {% if user.about %}<p>{{user.about}}</p>{% endif %}<hr/>
+    {% if user.last_seen %}<p>{{user.last_seen}}</p>{% endif %}<hr/>
+</div>
 {% for post in posts %}
 <p>
     {{post.author.nickname}} says: <b>{{post.body}}</b>
 </p>
 {% endfor %}
 {% endblock %}
+    
