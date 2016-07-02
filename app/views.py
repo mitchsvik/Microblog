@@ -76,13 +76,7 @@ def try_login(login = None, password = None):
     user = User.query.filter_by(nickname = login).first()
     if user is not None:
         if user.password == password:
-            remember_me = False
-            if 'remember_me' in session:
-                remember_me = session['remember_me']
-                session.pop('remember_me', None)
-            
-            print user
-            login_user(user = user, remember = remember_me)
+            login_user(user = user, remember = session['remember_me'])
             return redirect(request.args.get('next') or url_for('index'))
         
     flash('Invalid login. Please try again')
@@ -115,7 +109,16 @@ def edit():
         db.session.add(g.user)
         db.session.commit()
         flash('Changes have been saved.')
-        return redirect(url_for('user'))
+        return redirect(url_for('user', nickname = g.user.nickname))
     else:
         form.about.data = g.user.about
     return render_template('edit.html', form = form)
+
+@app.errorhandler(404)
+def page_not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def server_internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
