@@ -10,16 +10,8 @@ from datetime import datetime
 @login_required
 def index():
 	user = g.user
-	posts = [
-		{
-			'author' : {'nickname' : 'Mitchsvik'},
-			'body' : 'text'
-		},
-		{
-			'author' : {'nickname' : 'User'},
-			'body' : 'another text'
-		}
-	]
+	posts = []
+    
 	return render_template('index.html', title = 'Home',
                            user = user, posts = posts)
 
@@ -41,6 +33,10 @@ def try_to_register(login = None, email = None, password = None):
         user = User(nickname = login, email = email, password = password, role = ROLE_USER)
         db.session.add(user)
         db.session.commit()
+        
+        db.session.add(user.follow(user))
+        db.session.commit()
+        
         return redirect(url_for('login'))
         
     flash('Login or Email are already used. Please try another')
@@ -113,6 +109,46 @@ def edit():
     else:
         form.about.data = g.user.about
     return render_template('edit.html', form = form)
+
+@app.route('/follow/<nickname>')
+@login_required
+def follow(nickname):
+    user = User.query.filter_by(nickname = nickname).first()
+    if user == None:
+        flash('User ' + nickname + ' not found.')
+        return redirect(url_for('index'))
+    if user == g.user:
+        flash('You can\'t follow yourself!')
+        return redirect(url_for('user', nickname = nickname))
+   
+    u = g.user.follow(user)
+    if u is None:
+        flash('Cannot follow ' + nickname + '.')
+        return redirect(url_for('user', nickname = nickname))
+    db.session.add(u)
+    db.session.commit()
+    flash('You are now following ' + nickname + '!')
+    return redirect(url_for('user', nickname = nickname))
+
+@app.route('/unfollow/<nickname>')
+@login_required
+def unfollow(nickname):
+    user = User.query.filter_by(nickname = nickname).first()
+    if user == None:
+        flash('User ' + nickname + ' not found.')
+        return redirect(url_for('index'))
+    if user == g.user:
+        flash('You can\'t unfollow yourself!')
+        return redirect(url_for('user', nickname = nickname))
+    
+    u = g.user.unfollow(user)
+    if u is None:
+        flash('Cannot unfollow ' + nickname + '.')
+        return redirect(url_for('user', nickname = nickname))
+    db.session.add(u)
+    db.session.commit()
+    flash('You have stopped following ' + nickname + '.')
+    return redirect(url_for('user', nickname = nickname))
 
 @app.errorhandler(404)
 def page_not_found_error(error):

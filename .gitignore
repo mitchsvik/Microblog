@@ -1,6 +1,8 @@
 flask
 db_repository
+tmp
 
 *.pyc
 
 app.db
+test.db
