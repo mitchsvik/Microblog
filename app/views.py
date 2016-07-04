@@ -1,16 +1,24 @@
 from flask import render_template, redirect, flash, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from forms import RegistrationForm, LoginForm, EditForm
-from models import User, ROLE_USER, ROLE_ADMIN
+from forms import RegistrationForm, LoginForm, EditForm, PostForm
+from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
+from config import POSTS_PER_PAGE
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods = ['GET', 'POST'])
+@app.route('/index', methods = ['GET', 'POST'])
+@app.route('/index/<int:page>', methods = ['GET', 'POST'])
 @login_required
-def index():
-	user = g.user
-	posts = []
+def index(page = 1):
+	form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body = form.post.data, timestamp = datetime.utcnow(), author = g.user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post published!')
+        return redirect(url_for('index'))
+	posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
     
 	return render_template('index.html', title = 'Home',
                            user = user, posts = posts)
@@ -84,16 +92,14 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/user/<nickname>')
+@app.route('/user/<nickname>/<int:page>')
 @login_required
-def user(nickname):
+def user(nickname, page = 1):
     user = User.query.filter_by(nickname = nickname).first()
     if user == None:
         flash('User ' + nickname + ' not found.')
         return redirect(url_fol('index'))
-    posts = [
-        {'author' : user, 'body': 'Test post 1'},
-        {'author' : user, 'body': 'Test post 2'}
-    ]
+    posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html', user = user, posts = posts)
 
 @app.route('/edit', methods = ['GET', 'POST'])

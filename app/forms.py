@@ -16,3 +16,6 @@ class LoginForm(Form):
 
 class EditForm(Form):
     about = TextAreaField('About user', validators = [Length(min = 0, max = 199)])
+
+class PostForm(Form):
+    post = TextField('Post', validators = [Required()])
