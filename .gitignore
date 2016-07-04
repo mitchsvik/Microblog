@@ -1,6 +1,7 @@
 flask
 db_repository
 tmp
+search.db
 
 *.pyc
 

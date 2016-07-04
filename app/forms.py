@@ -19,3 +19,6 @@ class EditForm(Form):
 
 class PostForm(Form):
     post = TextField('Post', validators = [Required()])
+
+class SearchForm(Form):
+    search = TextField('Search', validators = [Required()])

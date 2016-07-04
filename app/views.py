@@ -1,27 +1,27 @@
 from flask import render_template, redirect, flash, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from forms import RegistrationForm, LoginForm, EditForm, PostForm
+from forms import RegistrationForm, LoginForm, EditForm, PostForm, SearchForm
 from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
-from config import POSTS_PER_PAGE
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/index', methods = ['GET', 'POST'])
 @app.route('/index/<int:page>', methods = ['GET', 'POST'])
 @login_required
 def index(page = 1):
-	form = PostForm()
-    if form.validate_on_submit():
+    form = PostForm()
+    if form.validate_on_submit(): 
         post = Post(body = form.post.data, timestamp = datetime.utcnow(), author = g.user)
         db.session.add(post)
         db.session.commit()
         flash('Your post published!')
         return redirect(url_for('index'))
-	posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
-    
-	return render_template('index.html', title = 'Home',
-                           user = user, posts = posts)
+    posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
+    return render_template('index.html', title = 'Home', 
+                           form = form, posts = posts)
+
 
 @app.route('/registration', methods = {'GET', 'POST'})
 def registration():
@@ -57,6 +57,7 @@ def before_request():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
+        g.search_form = SearchForm()
 
 @lm.user_loader
 def load_user(id):
@@ -155,6 +156,14 @@ def unfollow(nickname):
     db.session.commit()
     flash('You have stopped following ' + nickname + '.')
     return redirect(url_for('user', nickname = nickname))
+
+@app.route('/search', methods = ['POST'])
+@login_required
+def search():
+    if not g.search_form.validate_on_submit():
+        return redirect(url_for('index'))
+    results = Post.query.whoosh_search(g.search_form.search.data, MAX_SEARCH_RESULTS).all()
+    return render_template('search.html', query = g.search_form.search.data, results = results) 
 
 @app.errorhandler(404)
 def page_not_found_error(error):
