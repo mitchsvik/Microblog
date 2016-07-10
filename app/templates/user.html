@@ -1,33 +1,26 @@
-{% extends "main_menu.html" %}
+{% extends 'main_menu.html' %}
 
 {% block content %}
-<div>
+
+{% include 'flash.html' %}
+
+<div class="well well-large" >
     <h1>User: {{user.nickname}}</h1>
     {% if user.about %}<p>{{user.about}}</p>{% endif %}
     {% if user.last_seen %}<p>Last seen: {{user.last_seen}}</p>{% endif %}
-    <p>{{user.followers.count()}} followers |
-    {% if user.id == g.user.id %}<a href="{{url_for('edit')}}">Edit</a>
-    {% elif not g.user.is_following(user) %}}<a href="{{url_for('follow', nickname = user.nickname)}}">Follow</a>
+    <p>{{user.followers.count()}} followers </p>
+    
+    {% if user.id == g.user.id %}<a href="{{url_for('edit')}}">Edit</a>    
+    {% elif not g.user.is_following(user) %}<a href="{{url_for('follow', nickname = user.nickname)}}">Follow</a>
     {% else %}<a href="{{url_for('unfollow', nickname = user.nickname)}}">Unfollow</a>
     {% endif %}
     </p>
-    <hr/>
 </div>
 
 {% for post in posts.items %}
     {% include 'post.html' %}
 {% endfor %}
 
-{% if posts.has_prev %}
-    <a href="{{url_for('index', page = posts.prev_num)}}">Newer posts</a>
-{% else %}
-    New posts
-{% endif %} 
- | 
-{% if posts.has_next %}
-    <a href="{{url_for('index', page = posts.next_num)}}">Older posts</a>
-{% else %}
-    Old posts
-{% endif %}
+{% include 'pager.html' %}
 
 {% endblock %}

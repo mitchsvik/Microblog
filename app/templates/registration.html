@@ -1,37 +1,60 @@
-{% extends "main_menu.html" %}
+{% extends 'main_menu.html' %}
 
 {% block content %}
 
-<h1>Registration</h1>
-<form action="" method="post" name="registration">
-    {{form.hidden_tag()}}
-    <p>
-        Login <br/>
-        {{form.login(size = 80)}} 
-        {% for error in form.errors.login %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %} <br/>
-        
-        Email <br/>
-        {{form.email(size = 80)}}
-        {% for error in form.errors.email %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %} <br/>
-        
-        Password <br/>
-        {{form.password(size = 80)}} 
-        {% for error in form.errors.password %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %} <br/>
-        
-        Confirm password <br/>
-        {{form.confirm(size = 80)}} 
-        {% for error in form.errors.confirm %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %} <br/>
-    </p>
-    <p>{{form.accept_rules}}Accept rules</p>
-    <p><input type="submit" value="Finish"/></p>
-</form>
+{% include 'flash.html' %}
+
+<div class="well">
+    <h3>Registration</h3>
+    <form class="form" action="" method="post" name="registration">
+        {{form.hidden_tag()}}
+        <div class="control-group{% if form.errors.login %} error{% endif %}">
+            <label class="control-label" for="login">Login</label>
+            <div class="controls">
+                {{form.login(size = 80, class="span4")}} 
+                {% for error in form.errors.login %}
+                    <span class="help-inline">[{{error}}]</span><br/>
+                {% endfor %} 
+            </div>
+        </div>
+        <div class="control-group{% if form.errors.email %} error{% endif %}">
+            <label class="control-label" for="email">Email</label>
+            <div class="controls">
+                {{form.email(size = 80, class="span4")}} 
+                {% for error in form.errors.email %}
+                    <span class="help-inline">[{{error}}]</span><br/>
+                {% endfor %} 
+            </div>
+        </div>
+        <div class="control-group{% if form.errors.password %} error{% endif %}">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                {{form.password(size = 80, class="span4")}} 
+                {% for error in form.errors.password %}
+                    <span class="help-inline">[{{error}}]</span><br/>
+                {% endfor %} 
+            </div>
+        </div>
+        <div class="control-group{% if form.errors.confirm %} error{% endif %}">
+            <label class="control-label" for="confirm">Confirm password</label>
+            <div class="controls">
+                {{form.confirm(size = 80, class="span4")}} 
+                {% for error in form.errors.confirm %}
+                    <span class="help-inline">[{{error}}]</span><br/>
+                {% endfor %} 
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                 <label>{{form.accept_rules}} Accept rules </label> 
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="Finish"/>
+            </div>
+        </div>
+    </form>
+</div>
 
 {% endblock %}

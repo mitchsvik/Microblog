@@ -2,6 +2,7 @@ flask
 db_repository
 tmp
 search.db
+app/static/bootstrap
 
 *.pyc
 

@@ -1,8 +1,11 @@
-{% extends "main_menu.html" %}
+{% extends 'main_menu.html' %}
 
 {% block content %}
 
 <h1>Search results for "{{query}}":</h1>
+
+{% include 'flah.html' %}
+
 {% for post in results %}
     {% include 'post.html' %}
 {% endfor %}

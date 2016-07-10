@@ -1,25 +1,42 @@
-{% extends "main_menu.html" %}
+{% extends 'main_menu.html' %}
 
 {% block content %}
 
-<h1>Sign In</h1>
-<form action="" method="post" name="login">
-    {{form.hidden_tag()}}
-    <p>
-        Login <br/>
-        {{form.login(size = 80)}} 
-        {% for error in form.errors.login %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %} <br/>
-        
-        Password <br/>
-        {{form.password(size = 80)}} 
-        {% for error in form.errors.password %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %} <br/>
-    </p>
-    <p>{{form.remember_me}} Remember Me</p>
-    <p><input type="submit" value="Sign In"/></p>
-</form>
+{% include 'flash.html' %}
+
+<div class="well">
+    <h3>Sign In</h3>
+    <form class="form" action="" method="post" name="login">
+        {{form.hidden_tag()}}
+        <div class="control-group{% if form.errors.login %} error{% endif %}">
+            <label class="control-label" for="login">Login</label>
+            <div class="controls">
+                {{form.login(size = 80, class="span4")}} 
+                {% for error in form.errors.login %}
+                    <span class="help-inline">[{{error}}]</span><br/>
+                {% endfor %} 
+            </div>
+        </div>
+        <div class="control-group{% if form.errors.password %} error{% endif %}">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                {{form.password(size = 80, class="span4")}} 
+                {% for error in form.errors.password %}
+                    <span class="help-inline">[{{error}}]</span><br/>
+                {% endfor %} 
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                 <label>{{form.remember_me}} Remember me</label> 
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="Sign In"/>
+            </div>
+        </div>
+    </form>
+</div>
 
 {% endblock %}
