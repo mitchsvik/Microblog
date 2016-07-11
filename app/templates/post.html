@@ -1,5 +1,6 @@
-<div>
+<div style="margin-left:20px;">
     <p><a href="{{url_for('user', nickname = post.author.nickname )}}">{{post.author.nickname}}</a> says:</p>
     <p>{{post.body}}</p>
-    <p>On {{post.timestamp}}</p>
+    <p>{{momentjs(post.timestamp).fromNow()}}</p>
+    <p><hr/></p>
 </div>

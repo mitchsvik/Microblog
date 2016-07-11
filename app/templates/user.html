@@ -7,7 +7,7 @@
 <div class="well well-large" >
     <h1>User: {{user.nickname}}</h1>
     {% if user.about %}<p>{{user.about}}</p>{% endif %}
-    {% if user.last_seen %}<p>Last seen: {{user.last_seen}}</p>{% endif %}
+    {% if user.last_seen %}<p>Last seen: {{momentjs(user.last_seen).calendar()}}</p>{% endif %}
     <p>{{user.followers.count()}} followers </p>
     
     {% if user.id == g.user.id %}<a href="{{url_for('edit')}}">Edit</a>    
