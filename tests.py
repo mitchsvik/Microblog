@@ -4,7 +4,8 @@ import unittest
 
 from config import basedir
 from app import app, db
-from app.models import User
+from app.models import User, Post
+from datetime import datetime
 
 class TestCase(unittest.TestCase):
     def setUp(self):
@@ -48,6 +49,17 @@ class TestCase(unittest.TestCase):
         assert user1.is_following(user2) == False
         assert user1.followed.count() == 0
         assert user2.followers.count() == 0
+        
+    def test_delete_post(self):
+        u = User(nickname = 'mitchsvik', email = 'mitchsvik@gmail.com')
+        p = Post(body = 'test', author = u, timestamp = datetime.utcnow())
+        db.session.add(u)
+        db.session.add(p)
+        db.session.commit()
+        
+        p = Post.query.get(1)
+        db.session.delete(p)
+        db.session.commit()
         
 if __name__ == '__main__':
     unittest.main()
