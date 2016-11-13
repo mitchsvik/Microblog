@@ -1,12 +1,14 @@
 import os
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from momentjs import momentjs
+
+from .momentjs import MomentJs
 
 app = Flask(__name__)
 app.config.from_object('config')
-app.jinja_env.globals['momentjs'] = momentjs
+app.jinja_env.globals['momentjs'] = MomentJs
 db = SQLAlchemy(app)
 
 lm = LoginManager()

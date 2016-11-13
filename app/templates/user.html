@@ -8,7 +8,7 @@
     <h1>User: {{user.nickname}}</h1>
     {% if user.about %}<p>{{user.about}}</p>{% endif %}
     {% if user.last_seen %}<p>Last seen: {{momentjs(user.last_seen).calendar()}}</p>{% endif %}
-    <p>{{user.followers.count()}} followers </p>
+    <p>{{user.followers.count() - 1}} followers </p>
     
     {% if user.id == g.user.id %}<a href="{{url_for('edit')}}">Edit</a>    
     {% elif not g.user.is_following(user) %}<a href="{{url_for('follow', nickname = user.nickname)}}">Follow</a>

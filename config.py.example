@@ -1,13 +1,13 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = 'mysql://root:rootpass@localhost:3306/microblog'
+SQLALCHEMY_DATABASE_URI = # Write database URI here
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 CSRF_ENABLED = True
-SECRET_KEY = 'very-strong-key-yep-123'
+SECRET_KEY = # Write Secret key you want to use
 
-POSTS_PER_PAGE = 3
+POSTS_PER_PAGE = 3 # Pagination parameter
 
 WHOOSH_BASE = os.path.join(basedir, 'search.db')
-MAX_SEARCH_RESULTS = 50
+MAX_SEARCH_RESULTS = 50 # Search parameter
