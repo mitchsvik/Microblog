@@ -1,9 +1,10 @@
+import hashlib
 from datetime import datetime
 
 from flask import render_template, redirect, flash, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, SALT
 from app import app, db, lm
 
 from .forms import RegistrationForm, LoginForm, EditForm, PostForm, SearchForm
@@ -59,7 +60,8 @@ def registration():
 
 def try_to_register(nickname=None, email=None, password=None):
     if User.query.filter_by(nickname=nickname).first() is None and User.query.filter_by(email=email).first() is None:
-        us = User(nickname=nickname, email=email, password=password, role=ROLE_USER)
+        us = User(nickname=nickname, email=email, password=hashlib.sha224((password+SALT).encode()).hexdigest(),
+                  role=ROLE_USER)
         db.session.add(us)
         db.session.commit()
 
@@ -105,7 +107,7 @@ def login():
 def try_login(nickname=None, password=None):
     user_ = User.query.filter_by(nickname=nickname).first()
     if user_ is not None:
-        if user_.password == password:
+        if user_.password == hashlib.sha224((password+SALT).encode()).hexdigest():
             login_user(user=user_, remember=session['remember_me'])
             return redirect(request.args.get('next') or url_for('index'))
 

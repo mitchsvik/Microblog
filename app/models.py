@@ -13,7 +13,7 @@ followers = db.Table('followers',
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(64), index=True, unique=True)
-    password = db.Column(db.String(32))
+    password = db.Column(db.String(64))
     email = db.Column(db.String(128), index=True, unique=True)
     role = db.Column(db.SmallInteger, default=ROLE_USER)
     posts = db.relationship('Post', backref='author', lazy='dynamic')

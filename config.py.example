@@ -6,6 +6,7 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 CSRF_ENABLED = True
 SECRET_KEY = # Write Secret key you want to use
+SALT = # Write SALT here
 
 POSTS_PER_PAGE = 3 # Pagination parameter
 
